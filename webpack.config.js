@@ -2,31 +2,32 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
-var autoprefixer = require('autoprefixer');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+const API_URL = {
+    production: JSON.stringify('https://builder.sleekfin.com/api/v1/'),
+    development: JSON.stringify('https://builder-dev.sleekfin.com/api/v1/'),
+    staging: JSON.stringify('https://builder.sleekfin.com/api/v1/'),
+};
 
 module.exports = {
     entry: ['react-hot-loader/patch', './src/index'],
     output: {
-        path: path.join(__dirname, '/dist'),
-        filename: 'static/js/[name].js',
-        publicPath: '/',
+        path: path.join(__dirname, '/build'),
+        filename: 'bundle.js',
+        publicPath: "/",
     },
     devServer: {
         historyApiFallback: true,
-        compress: true,
+        hot: true,
     },
     resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    },
-    performance: {
-        hints: false,
-        maxEntrypointSize: 512000,
-        maxAssetSize: 512000,
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
     module: {
         rules: [
             {
-                test: /\.(ts|js|ts|)x?$/,
+                test: /\.(ts|js)x?$/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
@@ -34,33 +35,29 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader', 'postcss-loader'],
+                use: ['style-loader', 'css-loader'],
             },
             {
                 test: /\.scss$/,
-                use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+                use: ['style-loader', 'css-loader', 'sass-loader'],
             },
             {
-                test: /\.(jpg|jpeg|png|woff|woff2|gif|eot|ttf|svg)$/,
+                test: /\.(jpg|jpeg|png|woff|woff2|gif|eot|ttf|svg|mp3)$/,
                 use: 'url-loader',
             },
         ],
     },
     plugins: [
+        new webpack.DefinePlugin({
+            API_URL: API_URL[process.env.NODE_ENV],
+        }),
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html',
         }),
-        new webpack.ProvidePlugin({
-            process: 'process/browser',
-        }),
         new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
         new ErrorOverlayPlugin(),
-        new webpack.LoaderOptionsPlugin({
-            options: {
-                postcss: [autoprefixer()],
-            },
-        }),
+        // new BundleAnalyzerPlugin()
     ],
     devtool: 'cheap-module-source-map',
     optimization: {

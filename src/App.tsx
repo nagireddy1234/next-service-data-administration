@@ -1,16 +1,13 @@
 import React from 'react';
-import Home from './home';
-import { Helmet } from 'react-helmet';
+import Routes from './routes';
+import { StyledEngineProvider } from '@mui/material/styles';
 
-function App() {
+const App = (): JSX.Element => {
     return (
-        <>
-            <Helmet>
-                <title>Next service data administration</title>
-            </Helmet>
-            <Home />
-        </>
+        <StyledEngineProvider injectFirst>
+            <Routes />
+        </StyledEngineProvider>
     );
-}
+};
 
 export default App;
