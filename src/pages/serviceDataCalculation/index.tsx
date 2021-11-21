@@ -43,6 +43,7 @@ const ServiceDataCalculation = () => {
     const [expectedDate, setExpectedDate] = useState('N/A');
     const [enableSendEmail, setEnableSendEmail] = useState(false);
     const [open, setOpen] = useState(false);
+    const [email, setEmail] = useState('');
 
     const submit = async (data: any) => {
         const { lastMilage, currentMilage, vin } = data;
@@ -73,6 +74,21 @@ const ServiceDataCalculation = () => {
         setEnableSendEmail(true);
     };
 
+    const handleSendEmail = async () => {
+        (window as any).Email.send({
+            SecureToken: '92715e6e-9662-4c03-95ce-ce54fefff7ca',
+            To: email,
+            From: 'nagireddy.panditi@gmail.com',
+            Subject: 'Vehical Service',
+            Body: `<html><p>Dear sir/madam,
+                    <br/>
+                    Your Vehicle very close to the service. next service date is ${expectedDate}. Please come to the service center on the expected date to perform the vehicle serive on time.
+                    <br/>
+                    Thank you
+                    </p></html>`,
+        }).then((message: any) => alert(message));
+    };
+
     return (
         <>
             <ConfirmationModal openOrNot={open} onClose={() => setOpen(false)}>
@@ -82,10 +98,11 @@ const ServiceDataCalculation = () => {
                             label="Please enter email..."
                             fullWidth
                             variant="outlined"
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                             className={classes.input}
-                            ref={register}
                         />
-                        <Button type="submit" fullWidth variant="contained">
+                        <textarea rows={10} />
+                        <Button type="submit" fullWidth variant="contained" onClick={handleSendEmail}>
                             Send Service notification
                         </Button>
                     </Box>
