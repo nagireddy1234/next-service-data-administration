@@ -122,7 +122,7 @@ const ServiceDataCalculation = () => {
                     </Box>
                 )}
             </ConfirmationModal>
-            <Grid container alignItems="center" justifyContent="center">
+            <Grid container alignItems="center" justifyContent="center" marginTop="4rem" padding="1rem 1.5rem">
                 <Box className={classes.formWrapper}>
                     <Typography variant="h4" textAlign="center" marginBottom="1rem">
                         Service Date Calculation
