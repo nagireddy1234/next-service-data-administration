@@ -15,7 +15,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, '/build'),
         filename: 'bundle.js',
-        publicPath: "/",
+        publicPath: '/',
     },
     devServer: {
         historyApiFallback: true,
@@ -23,6 +23,11 @@ module.exports = {
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    },
+    performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000,
     },
     module: {
         rules: [
