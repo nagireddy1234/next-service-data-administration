@@ -1,10 +1,9 @@
-# spaceship-purchase-configurator
+# next-service-data-administration
 
 ## Features
 
 ⚡️ Used typescript
 ⚡️ Optimized Performance with Webpack\
-⚡️ Optimzed SEO with react-helmet\
 ⚡️ Used babel for Javascript transcompiling\
 ⚡️ Valid HTML5 & SASS\
 
@@ -77,16 +76,11 @@ If your run into issues installing the dependencies with NPM, use this command:
 $ sudo npm install --unsafe-perm=true --allow-root
 ```
 
-Once your server has started, go to this url `http://localhost:3000/` and you will see the website running on a Development Server:
-
-## Deployment 📦
-
-I have used [Netlify](https://netlify.com) for deployment and I highly recommend to use [Netlify](https://netlify.com) to achieve this on the EASIEST WAY
+Once your server has started, go to this url `http://localhost:8080/` 
 
 ## Technologies used 🛠️
 
 -   [Webpack](https://webpack.js.org/concepts/) - Static module bundler
--   [react-helmet](https://www.npmjs.com/package/react-helmet/) - npm library to add better SEO(optimazation)
 -   [Sass](https://sass-lang.com/documentation/) - CSS extension language
     and Many more...!
 

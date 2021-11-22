@@ -1,7 +1,7 @@
+import React, { FC } from 'react';
 import { Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { red } from '@mui/material/colors';
-import React, { FC } from 'react';
 
 const useStyles = makeStyles({
     error: {
