@@ -1,5 +1,4 @@
-import { Button, Grid, Modal, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import {Modal} from '@mui/material';
 import React, { FC } from 'react';
 
 interface Props {

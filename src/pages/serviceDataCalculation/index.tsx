@@ -1,4 +1,4 @@
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField, TextFieldProps, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
@@ -11,6 +11,7 @@ import Error from '../../components/error';
 import dayjs from 'dayjs';
 import { getVehicalDetails } from '../../api';
 import ConfirmationModal from '../../components/confirmationModal';
+import { getMailInfo } from '../../util/mailer';
 
 const useStyles = makeStyles({
     input: {
@@ -44,16 +45,20 @@ const ServiceDataCalculation = () => {
     const [enableSendEmail, setEnableSendEmail] = useState(false);
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState('');
+    const [vehicalDetail, setVehicalDetails] = useState({ make: '', model: '', modelYear: '' });
 
     const submit = async (data: any) => {
         const { lastMilage, currentMilage, vin } = data;
         if (vin) {
             const result = await getVehicalDetails(vin);
-            console.log(result);
+            if (result.data.Results.length) {
+                const { Make, Model, ModelYear } = result.data.Results[0];
+                setVehicalDetails({ make: Make, model: Model, modelYear: ModelYear });
+            }
         }
 
-        const EstimatedServiceOn = 15;
-        const milageDifference = lastMilage - currentMilage;
+        const EstimatedServiceOn = 15000;
+        const milageDifference =  currentMilage - lastMilage;
 
         if (milageDifference >= EstimatedServiceOn) {
             setExpectedDate(dayjs().add(1, 'day').format('YYYY/MM/DD'));
@@ -75,18 +80,10 @@ const ServiceDataCalculation = () => {
     };
 
     const handleSendEmail = async () => {
-        (window as any).Email.send({
-            SecureToken: '92715e6e-9662-4c03-95ce-ce54fefff7ca',
-            To: email,
-            From: 'nagireddy.panditi@gmail.com',
-            Subject: 'Vehical Service',
-            Body: `<html><p>Dear sir/madam,
-                    <br/>
-                    Your Vehicle very close to the service. next service date is ${expectedDate}. Please come to the service center on the expected date to perform the vehicle serive on time.
-                    <br/>
-                    Thank you
-                    </p></html>`,
-        }).then((message: any) => alert(message));
+        (window as any).Email.send(getMailInfo(email, expectedDate)).then((message: any) => {
+            alert(message);
+            setOpen(false);
+        });
     };
 
     return (
@@ -101,7 +98,6 @@ const ServiceDataCalculation = () => {
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                             className={classes.input}
                         />
-                        <textarea rows={10} />
                         <Button type="submit" fullWidth variant="contained" onClick={handleSendEmail}>
                             Send Service notification
                         </Button>
@@ -164,7 +160,7 @@ const ServiceDataCalculation = () => {
                                 inputFormat="MM/dd/yyyy"
                                 value={currentDate}
                                 onChange={(date: any) => setCurentDate(date)}
-                                renderInput={(params) => (
+                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
                                     <TextField
                                         fullWidth
                                         ref={register}
@@ -202,11 +198,25 @@ const ServiceDataCalculation = () => {
                                     />
                                 }
                             />
+                            
                             <Button type="submit" fullWidth variant="contained">
                                 Calculate
                             </Button>
+                            {vehicalDetail.make && (
+                                <Typography
+                                    variant="h5"
+                                    marginTop="1.5rem"
+                                    textAlign="center"
+                                    color="green"
+                                    fontWeight={800}
+                                >
+                                    Your car is a {vehicalDetail.make} {vehicalDetail.model} with Model Year{' '}
+                                    {vehicalDetail.modelYear}
+                                </Typography>
+                            )}
                         </form>
-                        <Typography variant="h5" textAlign="center" marginTop="1rem">
+
+                        <Typography variant="h5" textAlign="center" marginTop="1.5rem">
                             Next Date Of Service
                         </Typography>
                         <Typography variant="h6" textAlign="center">
